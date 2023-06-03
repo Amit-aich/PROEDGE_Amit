@@ -1,6 +1,6 @@
 # Steps to download the apk (Android only) : 
-~ Right click on the file named as contacts.apk , click on save link as and save it to your local machine.
-~ Now you can simply install the apk file on your android device and it is ready to use.
+* Right click on the file named as contacts.apk , click on save link as and save it to your local machine.
+* Now you can simply install the apk file on your android device and it is ready to use.
 
 # Libraries and plugins : 
 1. expo-cli (global)
@@ -27,5 +27,5 @@
   video icons, and their phone number and email. There is also a "Close" button that triggers the popupClose function when pressed.
 * At last the ContactList component is exported as default and get imported in App.js from which we are showing the output in the frontend.
 
-<!-- In case unable to download the apk from the github repo please refer to this G-drive link -->
+*In case unable to download the apk from the github repo please refer to this G-drive link :
 * https://drive.google.com/file/d/1WXhOMbqSydJtQqQ5gpo2Q9M2xf_wDNTB/view?usp=sharing
