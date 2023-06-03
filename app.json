@@ -1,14 +1,14 @@
 {
   "expo": {
     "name": "contact",
-    "slug": "contact",
-    "version": "1.0.0",
+    "slug": "amit-contact",
+    "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/contactlist.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "image": "./assets/contactlist.png",
+      "resizeMode": "center",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
@@ -19,12 +19,17 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "foregroundImage": "./assets/contactlist.png"
+      },
+      "package": "com.amitaich.amitcontact"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/contactlist.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "bdeee09c-d55b-44df-97de-a8601ade92a1"
+      }
     }
   }
 }
