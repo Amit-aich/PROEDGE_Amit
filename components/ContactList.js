@@ -1,110 +1,30 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, Modal, StyleSheet, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, TextInput, FlatList, Text, TouchableOpacity, Modal, StyleSheet, Image } from 'react-native';
+import * as Contacts from 'expo-contacts';
 import call from "../assets/call.png";
 import text from "../assets/comment.png";
 import video from "../assets/zoom.png"
 
 
-const data = [
-    {
-        id: 1,
-        name: 'Amit kumar Aich ',
-        number: '+91 8340573054',
-        email: 'amitkumaraich.in@gmail.com',
-    },
-    {
-        id: 2,
-        name: 'Sudipt',
-        number: '+91 3215678290',
-        email: 'example@gmail.com',
-    },
-    {
-        id: 3,
-        name: 'Nilima',
-        number: '+91 4389290745',
-        email: 'example@gmail.com',
-    },
-    {
-        id: 4,
-        name: 'Aditya',
-        number: '+91 5319064782',
-        email: 'example@gmail.com',
-    },
-    {
-        id: 5,
-        name: 'Sanju',
-        number: '+91 5378921001',
-        email: 'example@gmail.com',
-    },
-    {
-        id: 6,
-        name: 'Satya Ranjan',
-        number: '+91 1892348904',
-        email: 'example@gmail.com',
-    },
-    {
-        id: 7,
-        name: 'PROEDGE',
-        number: '+91 1234567890',
-        email: 'example@gmail.com',
-    },
-    {
-        id: 8,
-        name: 'Jhon',
-        number: '+1 (435) 12318938',
-        email: 'example@gmail.com',
-    },
-    {
-        id: 9,
-        name: 'Peter',
-        number: '+91 3723890234',
-        email: 'example@gmail.com',
-    },
-    {
-        id: 10,
-        name: 'IronMan',
-        number: '+91 5637197846',
-        email: 'ironman@gmail.com',
-    },
-    {
-        id: 11,
-        name: 'Arjun',
-        number: '+91 2389651048',
-        email: 'example@gmail.com',
-    },
-    {
-        id: 12,
-        name: 'Arjun Proedge',
-        number: '+91 5060241056',
-        email: 'arjun@gmail.com',
-    },
-    {
-        id: 13,
-        name: 'LPU',
-        number: '+91 4189054678',
-        email: 'lpu@gmail.com',
-    },
-    {
-        id: 14,
-        name: 'Web Developer',
-        number: '+91 1234567890',
-        email: 'example@gmail.com',
-    },
-    {
-        id: 15,
-        name: 'Amit',
-        number: '+91 8340573054',
-        email: 'example@gmail.com',
-    },
-
-
-];
-
-
 const ContactList = () => {
     const [contact, setContact] = useState('');
     const [selectContact, setSelectContact] = useState(null);
+    const [data, setData] = useState([]);
 
+    useEffect(() => {
+        const loadContacts = async () => {
+            const { status } = await Contacts.requestPermissionsAsync();
+            if (status === 'granted') {
+                const { data } = await Contacts.getContactsAsync({
+                    fields: [Contacts.Fields.PhoneNumbers, Contacts.Fields.Emails],
+                });
+                if (data.length > 0) {
+                    setData(data);
+                }
+            }
+        };
+        loadContacts();
+    }, []);
 
     const contactSearch = (val) => {
         setContact(val);
@@ -119,41 +39,27 @@ const ContactList = () => {
     };
 
     const contactFiltered = data.filter((cont) =>
-        cont.name.toLowerCase().includes(contact.toLowerCase()),
+        cont.name && cont.name.toLowerCase().includes(contact.toLowerCase()),
     );
 
-
-    const renderItem = ({ item }) => (
+    let renderItem = ({ item }) => (
         <TouchableOpacity style={styles.mainView} onPress={() => pressedContact(item)}>
             <Image source={require('../assets/insideuser.png')} style={styles.userLogo}></Image>
             <View>
                 <Text style={styles.userName}>{item.name}</Text>
-                <Text style={styles.userName}>{item.number}</Text>
+                {item.phoneNumbers && <Text style={styles.userName}>{item.phoneNumbers[0].number}</Text>}
             </View>
         </TouchableOpacity>
     );
 
-    return (
+    const renderContactDetails = () => (
         <>
-            <View style={styles.top}>
-                <Image source={require('../assets/contactlist.png')} style={styles.List}></Image>
-                <Text style={styles.title}>Contacts</Text>
-            </View>
-            <View style={styles.wrapper}>
-
-                {/* search box to search from the contact list */}
-                <View style={styles.searchFix}>
-                    <TextInput style={styles.inputField} placeholder="Search your contact" value={contact} onChangeText={contactSearch} />
-                    <Image source={require('../assets/search.png')} style={styles.iconSearch} />
-                </View>
-                {/* Sowing the list of all saved contacts */}
-                <FlatList style={styles.allContacts} data={contactFiltered} renderItem={renderItem} keyExtractor={(item) => item.id.toString()}></FlatList>
-
-                {/* Modal to view the information of selected contact */}
-                <Modal visible={!!selectContact}>
-                    <View style={styles.popupContent}>
+        <Modal visible={selectContact !== null} onRequestClose={() => setSelectContact(null)}>
+            <View style={styles.popupContent}>
+                {selectContact && (
+                    <View  style={styles.partNew}>
                         <Image source={require('../assets/insideuser.png')} style={styles.insideUserIcon}></Image>
-                        <Text style={styles.contactName}>{selectContact?.name}</Text>
+                        <Text style={styles.contactName}>{selectContact.name}</Text>
                         <View style={styles.iconMain}>
                             <Image source={call} style={styles.demoIcons}></Image>
                             <Image source={text} style={styles.demoIcons}></Image>
@@ -164,27 +70,51 @@ const ContactList = () => {
                             <Text style={styles.textStyle}>text</Text>
                             <Text style={styles.textStyle}>video</Text>
                         </View>
-
-                        {/* Popup to show the selected contact information. */}
                         <View style={styles.infoCard}>
-                            <Text style={styles.phoneNumber}>Phone number : {selectContact?.number}</Text>
-                            <Text style={styles.phoneNumber}>Email : {selectContact?.email}</Text>
+                        <Text style={styles.phoneNumber}>Phone Number:   {selectContact.phoneNumbers && selectContact.phoneNumbers[0] ? selectContact.phoneNumbers[0].number : 'No phone number'}</Text>
                         </View>
-                        {/* Close button to close the popup and back to main screen. */}
                         <TouchableOpacity style={styles.buttonConatiner}>
-                            <Text onPress={popupClose}
-                                style={styles.buttontext}
-                                title='close'>Close</Text>
+                            <Text style={styles.buttontext} onPress={popupClose}>Close</Text>
                         </TouchableOpacity>
-
                     </View>
-
-                </Modal>
-
+                )}
             </View>
-        </>
+        </Modal>
+     </>
     );
+
+return (
+    <>
+        <View style={styles.top}>
+            <Image source={require('../assets/contactlist.png')} style={styles.List}></Image>
+            <Text style={styles.title}>Contacts</Text>
+        </View>
+        <View style={styles.wrapper}>
+            {/* search box to search from the contact list */}
+            <View style={styles.searchFix}>
+                <TextInput
+                    style={styles.inputField}
+                    placeholder="Search your contact"
+                    value={contact}
+                    onChangeText={contactSearch}
+                />
+                <Image source={require('../assets/search.png')} style={styles.iconSearch} />
+            </View>
+            {/* Showing the list of all saved contacts */}
+            <FlatList
+                style={styles.allContacts}
+                data={contactFiltered}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id.toString()}
+            />
+
+            {renderContactDetails()}
+
+        </View>
+    </>
+);
 }
+
 
 const styles = StyleSheet.create({
     wrapper: {
@@ -244,6 +174,7 @@ const styles = StyleSheet.create({
     insideUserIcon: {
         height: 100,
         width: 100,
+
     },
     demoIcons: {
         height: 50,
@@ -285,6 +216,7 @@ const styles = StyleSheet.create({
         marginTop: 30,
         marginLeft: 40,
         color: "#383637",
+        textAlign: "center"
     },
     infoCard: {
         flex: 0.4,
@@ -327,13 +259,12 @@ const styles = StyleSheet.create({
     List: {
         height: 45,
         width: 45,
+    },
+    partNew : {
+        flex : 0.8,
+        alignItems : 'center',
     }
 
 });
 
 export default ContactList;
-
-
-
-
-
