@@ -2,7 +2,7 @@
 * Right click on the file named as Contacts.apk , click on save link as and save it to your local machine.
 * Now you can simply install the apk file on your android device and it is ready to use.
 
-# Libraries and pl
+# Libraries and plugins : 
 ugins : 
 1. expo-cli (global)
 2. expo-status-bar
@@ -29,5 +29,5 @@ ugins :
 
 * The renderContactDetails function is defined to render the contact details popup as a Modal component. It displays the selected contact's details, including       name, user icon, and icons for call, text, and video actions.The phone number is displayed if available, a close button is provided to close the popup.
 
-*In case unable to download the apk from the github repo please refer to this G-drive link :
-* https://drive.google.com/file/d/1ltmSzAJUc4l555asuwTG27iKFEFu-1U3/view?usp=sharing
+* In case unable to download the apk from the github repo please refer to this G-drive link :
+  https://drive.google.com/file/d/1ltmSzAJUc4l555asuwTG27iKFEFu-1U3/view?usp=sharing
